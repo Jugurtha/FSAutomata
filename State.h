@@ -18,18 +18,4 @@ private:
 };
 
 
-struct StateHasher
-{
-    size_t operator()(const State &s) const { return boost::hash<std::string>()(s.id()); }
-    size_t operator()(State* const&s) const { return boost::hash<std::string>()(s->id()); }
-    size_t operator()(const std::string &s) const { return boost::hash<std::string>()(s); }
-};
-struct StateEqual
-{
-    size_t operator()(State* const&s, std::string str) const { return s->id()==str; }
-    size_t operator()(std::string str, State* const&s) const { return s->id()==str; }
-    size_t operator()(std::string str1, std::string str2) const { return str1==str2; }
-};
-
-
 #endif //FSAUTOMATA_STATE_H

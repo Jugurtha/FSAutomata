@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include "Word.h"
+#include "Alphabet.h"
 
 using namespace boost::multi_index;
 
@@ -98,18 +99,50 @@ int main() {
     II.container.get<Transitions::by_transition>().insert(Transition(&S0,"b",&S1));
     II.container.get<Transitions::by_transition>().insert(Transition(&S1,"b",&S1));
     II.container.get<Transitions::by_transition>().insert(Transition(&S1,"b",&S2));
+    II.container.get<Transitions::by_transition>().insert(Transition(&S0,"b",&S2));//Shouldn't be inserted
 
-    for(int i = 0;i< II.container.size();i++)
+    std::cout << "\n--Print all one--\n\n";
+
+    for(int i = 0;i< II.container.size();i++)//prints them all
         std::cout << II.container[i] << "\n";
 
-    std::cout << "\n" << *II.container.get<Transitions::by_transition>().find(TransitionKey("S1","b","S1"),TransitionHasher(),TransitionKeyEqual() ) << "\n\n" ;
+    std::cout << "\n--Print all two--\n\n";
+
+    for(auto it : II.container)//prints them all with different syntax
+        std::cout << it << "\n";
+
+    std::cout << "\n--find S1-b->S1 by_transition--\n\n";
+
+    std::cout << *II.container.get<Transitions::by_transition>().find(std::string("S1") + std::string("b") + std::string("S1")) << "\n" ;
+
+    std::cout << "\n--find all initial S1 by_initial--\n\n";
 
     auto pairIt = II.container.get<Transitions::by_initial>().equal_range("S1");
     for(auto it = pairIt.first; it != pairIt.second; it++)
         std::cout << *it << "\n";
-    std::cout << "\n\n";
+
+    std::cout << "\n--find all final S1 by_final--\n\n";
+
     auto pairIt2 = II.container.get<Transitions::by_final>().equal_range("S1");
     for(auto it = pairIt2.first; it != pairIt2.second; it++)
+        std::cout << *it << "\n";
+
+    std::cout << "\n--Alphabet check--\n\n";
+
+    Alphabet X({'a','b','c'});
+    std::cout << X.contains('c') << "\n";
+
+
+    std::cout << "\n--find all final S1-b-> by_initial_word--\n\n";
+
+    auto pairIt3 = II.container.get<Transitions::by_initial_word>().equal_range(boost::make_tuple("S1","b"));
+    for(auto it = pairIt3.first; it != pairIt3.second; it++)
+        std::cout << *it << "\n";
+
+    std::cout << "\n--find all final -b->S1 by_word_final--\n\n";
+
+    auto pairIt4 = II.container.get<Transitions::by_word_final>().equal_range(boost::make_tuple("b","S1"));
+    for(auto it = pairIt4.first; it != pairIt4.second; it++)
         std::cout << *it << "\n";
 
     return 0;
