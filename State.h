@@ -17,5 +17,9 @@ private:
     std::string id_;
 };
 
+std::ostream& operator<<(std::ostream& out, const State &state);
+bool operator==(const State &s1, const State &s2);
+
+
 
 #endif //FSAUTOMATA_STATE_H

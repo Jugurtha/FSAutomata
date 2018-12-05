@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 include_directories("C:\\Development\\Libraries\\Boost\\boost_1_67_0")
-add_executable(FSAutomata main.cpp Word.cpp Word.h State.cpp State.h Transition.cpp Transition.h Transitions.cpp Transitions.h Alphabet.h Alphabet.cpp)
+add_executable(FSAutomata main.cpp Word.cpp Word.h State.cpp State.h Transition.cpp Transition.h Transitions.cpp Transitions.h Alphabet.h Alphabet.cpp States.cpp States.h)
