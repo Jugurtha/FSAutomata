@@ -12,6 +12,8 @@
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 
+#include <unordered_set>
+
 #include "State.h"
 
 using namespace boost;
@@ -30,24 +32,26 @@ public:
                                                 hashed_unique< tag<by_state>, const_mem_fun<State, const std::string&, &State::id> >
                                                >
                                   > States_container;
-    typedef States_container::index<by_random_access>::type::iterator iterator_by_random_access;
-    typedef States_container::index<by_state>::type::iterator iterator_by_state;
+    typedef States_container::index<by_random_access>::type::const_iterator const_iterator_by_random_access;
+    typedef States_container::index<by_state>::type::const_iterator const_iterator_by_state;
 
     States(){}
     States(const States &states)= delete;
     ~States();
 
-    bool insert(const std::string &initial);
-    size_t erase(const std::string &initial);
+    bool insert(const std::string &state);
+    bool insert(State *state);
+    size_t erase(const std::string &state);
 
 
-    State* operator[](const int i);
-    iterator_by_random_access begin();
-    iterator_by_random_access end();
+    State* operator[](const int i)const;
+    const_iterator_by_random_access begin() const;
+    const_iterator_by_random_access end() const;
+    std::unordered_set<std::string> getStates() const;
 
-    State* operator[](const std::string &initial);
-    bool exist(const std::string &initial);
-    size_t size();
+    State* operator[](const std::string &state);
+    bool exist(const std::string &state);
+    size_t size()const;
 
 
 private:
@@ -57,5 +61,6 @@ private:
 
 };
 
+std::ostream& operator<<(std::ostream& out, const States &states);
 
 #endif //FSAUTOMATA_STATES_H

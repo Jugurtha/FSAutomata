@@ -5,51 +5,59 @@
 #include "States.h"
 
 
-bool States::insert(const std::string &initial)
+bool States::insert(const std::string &state)
 {
-    auto pair = index_by_state.insert(new State(initial));
+    auto pair = index_by_state.insert(new State(state));
     return pair.second;
 }
 
-size_t States::erase(const std::string &initial)
+size_t States::erase(const std::string &state)
 {
-    auto it = index_by_state.find(initial);
+    auto it = index_by_state.find(state);
     if(it==index_by_state.end())
         return 0;
     auto p = *it;
-    auto ret = index_by_state.erase(initial);
+    auto ret = index_by_state.erase(state);
     delete p;
     return ret;
 }
 
 
-State* States::operator[](const int i)
+State* States::operator[](const int i)const
 {
     return index_by_random_access[i];
 }
 
-States::iterator_by_random_access States::begin()
+States::const_iterator_by_random_access States::begin() const
 {
     return index_by_random_access.begin();
 }
 
-States::iterator_by_random_access States::end()
+States::const_iterator_by_random_access States::end() const
 {
     return index_by_random_access.end();
 }
 
-State* States::operator[](const std::string &initial)
+State* States::operator[](const std::string &state)
 {
-    auto it = index_by_state.find(initial);
+    auto it = index_by_state.find(state);
     return it==index_by_state.end()? nullptr:*it;
 }
 
-bool States::exist(const std::string &initial)
+std::unordered_set<std::string> States::getStates() const
 {
-    return index_by_state.count(initial)==1;
+    std::unordered_set<std::string> states;
+    for(auto ps : *this)
+        states.insert(ps->id());
+    return states;
 }
 
-size_t States::size()
+bool States::exist(const std::string &state)
+{
+    return index_by_state.count(state)==1;
+}
+
+size_t States::size()const
 {
     return container_.size();
 }
@@ -60,6 +68,21 @@ States::~States()
         if(s!= nullptr)
             delete s;
 
+}
+
+
+std::ostream& operator<<(std::ostream& out, const States &states)
+{
+    out << "{ " ;
+    const size_t size = states.size();
+    if(size>0)
+    {
+        out << *states[0];
+        for(int i = 1; i < size; ++i)
+            out << ", " << *states[i];
+    }
+    out << " }";
+    return out;
 }
 
 

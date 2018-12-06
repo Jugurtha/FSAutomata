@@ -10,29 +10,29 @@ bool Transitions::insert(State *initial, const std::string &word, State *final)
     return pair.second;
 }
 
-size_t Transitions::size()
+size_t Transitions::size() const
 {
     return index_by_random_access.size();
 }
 
-const Transition &Transitions::operator[](const int i)
+const Transition &Transitions::operator[](const int i)const
 {
     return index_by_random_access[i];
 }
 
-Transitions::iterator_by_transition Transitions::operator[](boost::tuple<std::string, std::string, std::string> transition)
+Transitions::const_iterator_by_transition Transitions::operator[](boost::tuple<std::string, std::string, std::string> transition)
 {
     return index_by_transition.find(boost::get<0>(transition)+boost::get<1>(transition)+boost::get<2>(transition));
 }
 
-Transitions::iterator_by_random_access Transitions::begin()
+Transitions::const_iterator_by_random_access Transitions::begin() const
 {
-    return index_by_random_access.begin();
+    return index_by_random_access.cbegin();
 }
 
-Transitions::iterator_by_random_access Transitions::end()
+Transitions::const_iterator_by_random_access Transitions::end()const
 {
-    return index_by_random_access.end();
+    return index_by_random_access.cend();
 }
 
 bool Transitions::exist(const std::string &initial, const std::string &word, const std::string &final)
@@ -41,22 +41,22 @@ bool Transitions::exist(const std::string &initial, const std::string &word, con
 }
 
 
-std::pair<Transitions::iterator_by_initial,Transitions::iterator_by_initial> Transitions::findAll_by_initial(const std::string &initial)
+std::pair<Transitions::const_iterator_by_initial,Transitions::const_iterator_by_initial> Transitions::findAll_by_initial(const std::string &initial)
 {
     return index_by_initial.equal_range(initial);
 }
 
-std::pair<Transitions::iterator_by_final,Transitions::iterator_by_final> Transitions::findAll_by_final(const std::string &final)
+std::pair<Transitions::const_iterator_by_final,Transitions::const_iterator_by_final> Transitions::findAll_by_final(const std::string &final)
 {
 	return index_by_final.equal_range(final);
 }
 
-std::pair<Transitions::iterator_by_initial_word,Transitions::iterator_by_initial_word> Transitions::findAll_by_initial_word(const std::string &initial, const std::string &word)
+std::pair<Transitions::const_iterator_by_initial_word,Transitions::const_iterator_by_initial_word> Transitions::findAll_by_initial_word(const std::string &initial, const std::string &word)
 {
 	return index_by_initial_word.equal_range(boost::make_tuple(initial,word));
 }
 
-std::pair<Transitions::iterator_by_word_final,Transitions::iterator_by_word_final> Transitions::findAll_by_word_final(const std::string &word, const std::string &final)
+std::pair<Transitions::const_iterator_by_word_final,Transitions::const_iterator_by_word_final> Transitions::findAll_by_word_final(const std::string &word, const std::string &final)
 {
 	return index_by_word_final.equal_range(boost::make_tuple(word,final));
 }
@@ -71,12 +71,12 @@ size_t Transitions::erase_by_initial(const std::string &initial)
 {
     return index_by_initial.erase(initial);
 }
-Transitions::iterator_by_initial_word Transitions::erase_by_initial_word(const std::string &initial, const std::string &word)
+Transitions::const_iterator_by_initial_word Transitions::erase_by_initial_word(const std::string &initial, const std::string &word)
 {
     auto pIt = index_by_initial_word.equal_range(boost::make_tuple(initial,word));
     return index_by_initial_word.erase(pIt.first,pIt.second);
 }
-Transitions::iterator_by_word_final Transitions::erase_by_word_final(const std::string &word, const std::string &final)
+Transitions::const_iterator_by_word_final Transitions::erase_by_word_final(const std::string &word, const std::string &final)
 {
     auto pIt = index_by_word_final.equal_range(boost::make_tuple(word,final));
     return index_by_word_final.erase(pIt.first,pIt.second);
@@ -86,4 +86,30 @@ size_t Transitions::erase_by_final(const std::string &final)
     return index_by_final.erase(final);
 }
 
+const std::unordered_set<std::string> Transitions::getTransitions() const
+{
+    std::unordered_set<std::string> transitions;
+    for(auto t : *this)
+        transitions.insert(t.transition());
+    return transitions;
+}
 
+std::ostream& operator<<(std::ostream& out, const Transitions &transitions)
+{
+    out << "{ " ;
+    const size_t size = transitions.size();
+    if(size>0)
+    {
+        if(size==1)
+            out << transitions[0];
+        else
+        {
+            out << "\n" << transitions[0];
+            for(int i = 1; i < size; ++i)
+                out << ", \n" << transitions[i];
+        }
+
+    }
+    out << " }";
+    return out;
+}

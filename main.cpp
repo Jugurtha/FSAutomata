@@ -4,15 +4,29 @@
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <string>
+#include <vector>
 #include <iostream>
+#include <ctime>
 #include "Word.h"
 #include "Alphabet.h"
 #include "Transitions.h"
 #include "States.h"
+#include "Automaton.h"
 
+
+std::string randStr(const Alphabet &alphabet, size_t length)
+{
+    std::mt19937_64 gen{std::random_device{}()};
+    std::uniform_int_distribution<size_t > dist{0, alphabet.size()-1};
+    std::vector<char> v(alphabet.begin(),alphabet.end());
+    std::string str;
+    for (size_t i = 0; i < length; ++i)
+        str.push_back(v[dist(gen)]);
+    return str;
+}
 
 int main() {
-
+    srand(time(NULL));
     Word w("abcd");
     std::cout << w.word() << " : " << w.mirror().word() << "\n";
 
@@ -139,7 +153,23 @@ int main() {
     for(auto it : II)//prints them all with different syntax
         std::cout << it << "\n";
 
+    std::cout << "\n--Automaton--\n\n";
 
+    Automaton A("A1",Alphabet({'a','b','c'}));
+
+    for (int j = 0; j < 5; ++j)
+        A.insertNewState("S"+std::to_string(j));
+
+    std::unordered_set<std::string>  finalStates({"S0","S1"});
+    A.setFinal(finalStates);
+
+    std::unordered_set<std::string>  initialStates({"S3","S4"});
+    A.setInitial(initialStates);
+
+    for (int k = 0; k < 6; ++k)
+        A.insertTransition("S"+std::to_string(rand()%5), randStr(A.getX(),k%3 +1), "S"+std::to_string(rand()%5));
+
+    std::cout << A << "\n";
 
     return 0;
 }
