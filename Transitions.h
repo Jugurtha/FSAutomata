@@ -66,8 +66,9 @@ public:
     Transitions(const Transitions &II):container_(II.container_){}
     Transitions(std::initializer_list<Transition> list):container_(list){}
 
-    bool insert(State *initial, const std::string &word, State *final);
+    bool insert(State *initial, const std::string word, State *final);
     size_t erase(const std::string &initial, const std::string &word, const std::string &final);
+    size_t erase(const Transition &transition);
     size_t erase_by_initial(const std::string &initial);
     const_iterator_by_initial_word erase_by_initial_word(const std::string &initial, const std::string &word);
     const_iterator_by_word_final erase_by_word_final(const std::string &word, const std::string &final);

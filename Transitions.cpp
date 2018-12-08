@@ -4,7 +4,7 @@
 
 #include "Transitions.h"
 
-bool Transitions::insert(State *initial, const std::string &word, State *final)
+bool Transitions::insert(State *initial, const std::string word, State *final)
 {
     auto pair = index_by_transition.emplace(initial,Word(word),final);
     return pair.second;
@@ -67,6 +67,11 @@ size_t Transitions::erase(const std::string &initial, const std::string &word, c
     return index_by_transition.erase(initial+word+final);
 }
 
+size_t Transitions::erase(const Transition &transition)
+{
+    return index_by_transition.erase(transition.transition());
+}
+
 size_t Transitions::erase_by_initial(const std::string &initial)
 {
     return index_by_initial.erase(initial);
@@ -104,9 +109,9 @@ std::ostream& operator<<(std::ostream& out, const Transitions &transitions)
             out << transitions[0];
         else
         {
-            out << "\n" << transitions[0];
+            out << "\n\t\t" << transitions[0];
             for(int i = 1; i < size; ++i)
-                out << ", \n" << transitions[i];
+                out << ", \n\t\t" << transitions[i];
         }
 
     }

@@ -19,8 +19,11 @@ public:
     Transition(State *initial, const std::string &word, State *final);
 
     const std::string initial()const { return initial_->id(); }
+    State* initialPtr()const { return initial_; }
     const std::string word() const { return word_.word(); }
+    const Word getWord() const { return word_; }
     const std::string final() const { return final_->id(); }
+    State* finalPtr() const { return final_; }
     const std::string transition() const { return initial_->id()+word_.word()+final_->id(); }
 private:
     State * initial_;

@@ -36,11 +36,11 @@ public:
     typedef States_container::index<by_state>::type::const_iterator const_iterator_by_state;
 
     States(){}
-    States(const States &states)= delete;
+    //States(const States &states)= delete;
     ~States();
 
     bool insert(const std::string &state);
-    bool insert(State *state);
+    bool insert(State *state)=delete;
     size_t erase(const std::string &state);
 
 
@@ -49,7 +49,7 @@ public:
     const_iterator_by_random_access end() const;
     std::unordered_set<std::string> getStates() const;
 
-    State* operator[](const std::string &state);
+    State* operator[](const std::string &state)const;
     bool exist(const std::string &state);
     size_t size()const;
 

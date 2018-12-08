@@ -38,7 +38,7 @@ States::const_iterator_by_random_access States::end() const
     return index_by_random_access.end();
 }
 
-State* States::operator[](const std::string &state)
+State* States::operator[](const std::string &state)const
 {
     auto it = index_by_state.find(state);
     return it==index_by_state.end()? nullptr:*it;

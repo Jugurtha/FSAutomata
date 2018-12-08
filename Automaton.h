@@ -15,6 +15,8 @@
 class Automaton {
 public:
     Automaton(const std::string &id, Alphabet X = Alphabet({'a','b'}));
+    Automaton(const std::string &id, const Alphabet &X, const States &S, const std::unordered_set<std::string> &Sinit,
+              const Transitions &II, const std::unordered_set<std::string> &Sfinal);
 
     bool insertTransition(const std::string &initial, const std::string &word, const std::string &final);
     bool insertNewState(const std::string &state);
@@ -32,6 +34,17 @@ public:
     const std::string &id()const{ return id_;}
 
     friend std::ostream& operator<<(std::ostream& out, const Automaton &automaton);
+
+    bool isRecognized(const Word word) const;
+
+    void toReduced();
+    const Automaton toPartiallyGeneralized() const;//-> |word|<=1
+    void removeEpsilonTransitions();
+    void toSimple();//-> |word|==1
+    void toDeterministic();
+    void toComplete();
+    void tocomplementary();
+
 
 private:
     std::string id_;

@@ -168,8 +168,16 @@ int main() {
 
     for (int k = 0; k < 6; ++k)
         A.insertTransition("S"+std::to_string(rand()%5), randStr(A.getX(),k%3 +1), "S"+std::to_string(rand()%5));
-
+/*    A.insertTransition("S0", "abc", "S1");
+    A.insertTransition("S0", "ac", "S1");
+    A.insertTransition("S0", "a", "S1");
+    A.insertTransition("S0", "b", "S1");
+*/
     std::cout << A << "\n";
+
+    std::cout << "\n--to Partially Generalized--\n\n";
+
+    std::cout << A.toPartiallyGeneralized() << "\n";
 
     return 0;
 }
