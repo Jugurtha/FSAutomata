@@ -8,10 +8,10 @@
 #include <string>
 class Word {
 public:
-    Word(std::string word):word_(word){}
+    Word(std::string word);
     Word mirror();
     const std::string &word()const{ return word_; }
-    bool isEpsilon()const{ return word_.empty() || word_[0]==' ';}
+    bool isEpsilon()const{ return word_[0] == ' ' || word_.empty();}
     std::string::const_iterator begin()const{ return word_.cbegin();}
     std::string::const_iterator end()const{ return word_.cend();}
     const std::string operator[](size_t i)const{ std::string c; c.push_back(word_[i]); return c;}

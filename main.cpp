@@ -168,7 +168,8 @@ int main() {
 
     for (int k = 0; k < 6; ++k)
         A.insertTransition("S"+std::to_string(rand()%5), randStr(A.getX(),k%3 +1), "S"+std::to_string(rand()%5));
-/*    A.insertTransition("S0", "abc", "S1");
+/*
+    A.insertTransition("S0", "abc", "S1");
     A.insertTransition("S0", "ac", "S1");
     A.insertTransition("S0", "a", "S1");
     A.insertTransition("S0", "b", "S1");
@@ -178,6 +179,58 @@ int main() {
     std::cout << "\n--to Partially Generalized--\n\n";
 
     std::cout << A.toPartiallyGeneralized() << "\n";
+
+//*
+    std::cout << "\n--Remove Epsilon Transitions--\n\n";
+
+    Automaton A1("A1",Alphabet({'0','1','2'}));
+
+    for (int j = 0; j < 3; ++j)
+        A1.insertNewState("S"+std::to_string(j));
+
+    std::unordered_set<std::string>  finalStates1({"S2"});
+    A1.setFinal(finalStates1);
+
+    std::unordered_set<std::string>  initialStates1({"S0"});
+    A1.setInitial(initialStates1);
+
+    A1.insertTransition("S0", "0", "S0");
+    A1.insertTransition("S0", " ", "S1");
+    A1.insertTransition("S1", "1", "S1");
+    A1.insertTransition("S1", "", "S2");
+    A1.insertTransition("S2", "2", "S2");
+
+    std::cout << A1 << "\n";
+
+    std::cout << A1.removeEpsilonTransitions() << "\n";
+//*/
+/*
+    std::cout << "\n--Remove Epsilon Transitions--\n\n";
+
+    Automaton A1("A1",Alphabet({'a','b'}));
+
+    A1.insertNewStates({"P","Q","R","Q1","R1","R2"});
+
+    std::unordered_set<std::string>  finalStates1({"Q","R"});
+    A1.setFinal(finalStates1);
+
+    std::unordered_set<std::string>  initialStates1({"P"});
+    A1.setInitial(initialStates1);
+
+
+    A1.insertTransition("P", " ", "Q");
+    A1.insertTransition("P", " ", "R");
+    A1.insertTransition("Q", "a", "Q1");
+    A1.insertTransition("Q1", "a", "Q");
+    A1.insertTransition("R", "a", "R1");
+    A1.insertTransition("R1", "a", "R2");
+    A1.insertTransition("R2", "a", "R");
+
+    std::cout << A1 << "\n";
+
+    std::cout << A1.removeEpsilonTransitions() << "\n";
+
+//*/
 
     return 0;
 }

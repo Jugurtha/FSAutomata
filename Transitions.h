@@ -67,6 +67,7 @@ public:
     Transitions(std::initializer_list<Transition> list):container_(list){}
 
     bool insert(State *initial, const std::string word, State *final);
+    bool insert(const Transition &transition);
     size_t erase(const std::string &initial, const std::string &word, const std::string &final);
     size_t erase(const Transition &transition);
     size_t erase_by_initial(const std::string &initial);
@@ -83,10 +84,10 @@ public:
     const_iterator_by_transition operator[](boost::tuple<std::string, std::string, std::string> transition);
     bool exist(const std::string &initial, const std::string &word, const std::string &final);
 
-    std::pair<const_iterator_by_initial,const_iterator_by_initial> findAll_by_initial(const std::string &initial);
-    std::pair<const_iterator_by_final,const_iterator_by_final> findAll_by_final(const std::string &final);
-    std::pair<const_iterator_by_initial_word,const_iterator_by_initial_word> findAll_by_initial_word(const std::string &initial, const std::string &word);
-    std::pair<const_iterator_by_word_final,const_iterator_by_word_final> findAll_by_word_final(const std::string &word, const std::string &final);
+    std::pair<const_iterator_by_initial,const_iterator_by_initial> findAll_by_initial(const std::string &initial)const;
+    std::pair<const_iterator_by_final,const_iterator_by_final> findAll_by_final(const std::string &final)const;
+    std::pair<const_iterator_by_initial_word,const_iterator_by_initial_word> findAll_by_initial_word(const std::string &initial, const std::string &word)const;
+    std::pair<const_iterator_by_word_final,const_iterator_by_word_final> findAll_by_word_final(const std::string &word, const std::string &final)const;
 
 private:
     Transitions_container container_;

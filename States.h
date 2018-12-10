@@ -36,7 +36,7 @@ public:
     typedef States_container::index<by_state>::type::const_iterator const_iterator_by_state;
 
     States(){}
-    //States(const States &states)= delete;
+    States(const States &states)= delete;
     ~States();
 
     bool insert(const std::string &state);

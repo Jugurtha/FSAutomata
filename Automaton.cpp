@@ -6,6 +6,10 @@
 
 Automaton::Automaton(const std::string &id, Alphabet X): id_(id), X(X) {}
 
+Automaton::Automaton(const Automaton &automaton):Automaton(automaton.id(),automaton.X, automaton.S, automaton.Sinit, automaton.II, automaton.Sfinal)
+{
+}
+
 Automaton::Automaton(const std::string &id, const Alphabet &X, const States &S,
                      const std::unordered_set<std::string> &Sinit, const Transitions &II,
                      const std::unordered_set<std::string> &Sfinal) : id_(id), X(X)
@@ -29,7 +33,21 @@ bool Automaton::insertTransition(const std::string &initial, const std::string &
 }
 
 bool Automaton::insertNewState(const std::string &state) {
+    if(state.find('_')!=state.npos)
+        return false;
     return S.insert(state);
+}
+
+bool Automaton::insertNewStates(const std::unordered_set<std::string> &states)
+{
+    bool ret = true;
+    for(auto state : states) {
+        if (state.find('_') != state.npos)
+            ret = false;
+        else
+            ret &= S.insert(state);
+    }
+    return ret;
 }
 
 bool Automaton::setInitial(const std::string &state) {
@@ -87,6 +105,15 @@ bool Automaton::setInitial(std::unordered_set<std::string> states) {
     return true;
 }
 
+bool Automaton::isInitial(const std::string state)const
+{
+    return Sinit.count(state)==1;
+}
+bool Automaton::isFinal(const std::string state)const
+{
+    return Sfinal.count(state)==1;;
+}
+
 std::ostream& operator<<(std::ostream& out, const Automaton &automaton)
 {
     out << automaton.id() << "\t<" << "\n";
@@ -98,27 +125,27 @@ std::ostream& operator<<(std::ostream& out, const Automaton &automaton)
     return out;
 }
 
-void Automaton::toSimple() {
-    toPartiallyGeneralized();
-    removeEpsilonTransitions();
+const Automaton  Automaton::toSimple() const{
+    //toPartiallyGeneralized();
+    //removeEpsilonTransitions();
 }
 
-void Automaton::toDeterministic() {
-    toSimple();
+const Automaton  Automaton::toDeterministic() const{
+    //toSimple();
     //...
 }
 
-void Automaton::tocomplementary() {
+const Automaton  Automaton::tocomplementary() const{
 
 }
 
-void Automaton::toComplete() {
+const Automaton  Automaton::toComplete() const{
     //At least simple
 }
 
 const Automaton Automaton::toPartiallyGeneralized() const//-> |word|<=1
 {
-    Automaton temp(id_,X,S,Sinit,II,Sfinal);
+    Automaton temp(*this);
     static int index = 0;
     for(auto t : II)
     {
@@ -159,8 +186,92 @@ const Automaton Automaton::toPartiallyGeneralized() const//-> |word|<=1
     return temp;
 }
 
-void Automaton::removeEpsilonTransitions() {
+const Automaton  Automaton::removeEpsilonTransitions() const{
+    Automaton temp(id_,X);
 
+    if(!temp.insertNewStates(Sinit))// temp.S = Sinit
+    {
+        std::cout << "removeEpsilonTransitions failed on states insertion" << "\n";
+        return temp;
+    }
+
+    temp.setInitial(Sinit);
+
+    for(auto s : Sinit) {//temp.Sfinal = Sinit inter Sfinal
+        if (Sfinal.count(s) == 1)
+            if(!temp.setFinal(s))
+            {
+                std::cout << "removeEpsilonTransitions failed on states insertion" << "\n";
+                return temp;
+            }
+    }
+
+    std::stack<Transition> bucket;
+    for(auto s : Sinit)//Most of the time, there will only be one initial state.
+    {
+        auto pIt = II.findAll_by_initial(s);//We retrieve the transitions that start from an initial state.
+        for(auto it = pIt.first; it != pIt.second; it++ )
+            bucket.push(*it);
+    }
+
+    Transitions IIepsilon;
+
+    //IIepsilon = {}
+    //temp.II = {}
+    //bucket = {(q1,a,q2) | q1 in Sinit}
+/*
+    std::cout << "------------------------\n";
+    std::cout << "bucket.size() = " << bucket.size() << " : bucket = \n" << bucket << "\n";
+    std::cout << "\nIIepsilon = \n" << IIepsilon << "\n" << temp << "\n";
+    std::cout << "----------------------\n";
+//*/
+    while (!bucket.empty())
+    {
+        auto transition = bucket.top(); bucket.pop();//top; pop == pick
+
+        if(!transition.getWord().isEpsilon()) //w!=epsilon
+        {
+            temp.insertNewState(transition.final());
+
+            temp.insertTransition(transition.initial(),transition.word(),transition.final());
+
+            if(isFinal(transition.final()))
+                temp.setFinal(transition.final());
+
+            auto pIt = II.findAll_by_initial(transition.final());
+            for(auto it = pIt.first;it != pIt.second;it++)
+            {
+                if(it->getWord().isEpsilon()) {
+                    if (!temp.II.exist(transition.initial(), transition.word(), it->final()))
+                        bucket.push(Transition(transition.initialPtr(), transition.word(), it->finalPtr()));
+                }
+                else {//There was a "dangling else" problem here. I put the else here without the {}, so there was anbiguity(https://en.wikipedia.org/wiki/Dangling_else). which is a strait forwad exemple of what we've seen in class(what lead to Chomsky and Greibach normal forms).
+                        if (!temp.II.exist(transition.final(), it->word(), it->final()))
+                            bucket.push(Transition(transition.finalPtr(), it->word(), it->finalPtr()));
+                    }
+            }
+        }
+        else //w==epsilon
+        {
+            IIepsilon.insert(transition.initialPtr(),transition.word(),transition.finalPtr());
+
+            if(isFinal(transition.final()))
+                temp.setFinal(transition.initial());//State already inserted with the first block of if close or with initial states
+
+            auto pIt = II.findAll_by_initial(transition.final());
+            for(auto it = pIt.first;it != pIt.second;it++)
+            {
+                if(!temp.II.exist(transition.initial(),it->word(),it->final()) && !IIepsilon.exist(transition.initial(),it->word(),it->final()))
+                    bucket.push(Transition(transition.initialPtr(),it->word(),it->finalPtr()));
+            }
+        }
+/*
+        std::cout << "--------------\n";
+        std::cout << "bucket.size() = " << bucket.size() << " : bucket = \n" << bucket << "\n";
+        std::cout << "\nIIepsilon = \n" << IIepsilon << "\n" << temp << "\n";
+//*/
+    }
+    return temp;
 }
 
 
@@ -179,7 +290,28 @@ std::ostream& operator<<(std::ostream& out, const std::unordered_set<std::string
     return out;
 }
 
+std::ostream& operator<<(std::ostream& out, std::stack<Transition> stack)
+{
 
+    const size_t size = stack.size();
+    if(size>0)
+    {
+        out << "{ " ;
+        if(size==1)
+            out << stack.top() << " }";
+        else
+        {
+            out << "\n\t" << stack.top();stack.pop();
+            while(!stack.empty())
+            {
+                out << ", \n\t" << stack.top();
+                stack.pop();
+            }
+            out << "\n }";
+        }
+    }
+    return out;
+}
 
 
 

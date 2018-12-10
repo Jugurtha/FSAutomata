@@ -11,3 +11,10 @@ Word Word::mirror()
         mirrorWord.push_back(*it);
     return Word(mirrorWord);
 }
+
+Word::Word(std::string word){
+    if(word.empty() || word[0]==' ' || word.find(" ")!=word.npos)
+        word_ = " ";
+    else
+        word_ = word;
+}

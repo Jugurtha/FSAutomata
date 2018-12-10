@@ -10,6 +10,11 @@ bool Transitions::insert(State *initial, const std::string word, State *final)
     return pair.second;
 }
 
+bool Transitions::insert(const Transition &transition)
+{
+    return insert(transition.initialPtr(),transition.word(), transition.finalPtr());
+}
+
 size_t Transitions::size() const
 {
     return index_by_random_access.size();
@@ -41,22 +46,22 @@ bool Transitions::exist(const std::string &initial, const std::string &word, con
 }
 
 
-std::pair<Transitions::const_iterator_by_initial,Transitions::const_iterator_by_initial> Transitions::findAll_by_initial(const std::string &initial)
+std::pair<Transitions::const_iterator_by_initial,Transitions::const_iterator_by_initial> Transitions::findAll_by_initial(const std::string &initial)const
 {
     return index_by_initial.equal_range(initial);
 }
 
-std::pair<Transitions::const_iterator_by_final,Transitions::const_iterator_by_final> Transitions::findAll_by_final(const std::string &final)
+std::pair<Transitions::const_iterator_by_final,Transitions::const_iterator_by_final> Transitions::findAll_by_final(const std::string &final)const
 {
 	return index_by_final.equal_range(final);
 }
 
-std::pair<Transitions::const_iterator_by_initial_word,Transitions::const_iterator_by_initial_word> Transitions::findAll_by_initial_word(const std::string &initial, const std::string &word)
+std::pair<Transitions::const_iterator_by_initial_word,Transitions::const_iterator_by_initial_word> Transitions::findAll_by_initial_word(const std::string &initial, const std::string &word)const
 {
 	return index_by_initial_word.equal_range(boost::make_tuple(initial,word));
 }
 
-std::pair<Transitions::const_iterator_by_word_final,Transitions::const_iterator_by_word_final> Transitions::findAll_by_word_final(const std::string &word, const std::string &final)
+std::pair<Transitions::const_iterator_by_word_final,Transitions::const_iterator_by_word_final> Transitions::findAll_by_word_final(const std::string &word, const std::string &final)const
 {
 	return index_by_word_final.equal_range(boost::make_tuple(word,final));
 }
