@@ -20,8 +20,9 @@ public:
     Automaton(const std::string &id, const Alphabet &X, const States &S, const std::unordered_set<std::string> &Sinit,
               const Transitions &II, const std::unordered_set<std::string> &Sfinal);
 
-    bool insertTransition(const std::string &initial, const std::string &word, const std::string &final);
+    bool insertTransition(const std::string &source, const std::string &word, const std::string &destination);
     bool insertNewState(const std::string &state);
+    bool insertSinkState();
     bool insertNewStates(const std::unordered_set<std::string> &states);
     bool setInitial(const std::string &state);
     bool setInitial(std::unordered_set<std::string> states);
@@ -49,7 +50,7 @@ public:
     const Automaton  toSimple()const;//-> |word|==1
     const Automaton  toDeterministic()const;
     const Automaton  toComplete()const;
-    const Automaton  tocomplementary()const;
+    const Automaton  toComplementary()const;
 
 
 private:

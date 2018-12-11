@@ -4,15 +4,15 @@
 
 #include "Transitions.h"
 
-bool Transitions::insert(State *initial, const std::string word, State *final)
+bool Transitions::insert(State *source, const std::string word, State *destination)
 {
-    auto pair = index_by_transition.emplace(initial,Word(word),final);
+    auto pair = index_by_transition.emplace(source,Word(word),destination);
     return pair.second;
 }
 
 bool Transitions::insert(const Transition &transition)
 {
-    return insert(transition.initialPtr(),transition.word(), transition.finalPtr());
+    return insert(transition.sourcePtr(),transition.word(), transition.destinationPtr());
 }
 
 size_t Transitions::size() const
@@ -40,36 +40,36 @@ Transitions::const_iterator_by_random_access Transitions::end()const
     return index_by_random_access.cend();
 }
 
-bool Transitions::exist(const std::string &initial, const std::string &word, const std::string &final)
+bool Transitions::exist(const std::string &source, const std::string &word, const std::string &destination)
 {
-    return index_by_transition.count(initial+word+final)==1;
+    return index_by_transition.count(source+word+destination)==1;
 }
 
 
-std::pair<Transitions::const_iterator_by_initial,Transitions::const_iterator_by_initial> Transitions::findAll_by_initial(const std::string &initial)const
+std::pair<Transitions::const_iterator_by_source,Transitions::const_iterator_by_source> Transitions::findAll_by_source(const std::string &source)const
 {
-    return index_by_initial.equal_range(initial);
+    return index_by_source.equal_range(source);
 }
 
-std::pair<Transitions::const_iterator_by_final,Transitions::const_iterator_by_final> Transitions::findAll_by_final(const std::string &final)const
+std::pair<Transitions::const_iterator_by_destination,Transitions::const_iterator_by_destination> Transitions::findAll_by_destination(const std::string &destination)const
 {
-	return index_by_final.equal_range(final);
+	return index_by_destination.equal_range(destination);
 }
 
-std::pair<Transitions::const_iterator_by_initial_word,Transitions::const_iterator_by_initial_word> Transitions::findAll_by_initial_word(const std::string &initial, const std::string &word)const
+std::pair<Transitions::const_iterator_by_source_word,Transitions::const_iterator_by_source_word> Transitions::findAll_by_source_word(const std::string &source, const std::string &word)const
 {
-	return index_by_initial_word.equal_range(boost::make_tuple(initial,word));
+	return index_by_source_word.equal_range(boost::make_tuple(source,word));
 }
 
-std::pair<Transitions::const_iterator_by_word_final,Transitions::const_iterator_by_word_final> Transitions::findAll_by_word_final(const std::string &word, const std::string &final)const
+std::pair<Transitions::const_iterator_by_word_destination,Transitions::const_iterator_by_word_destination> Transitions::findAll_by_word_destination(const std::string &word, const std::string &destination)const
 {
-	return index_by_word_final.equal_range(boost::make_tuple(word,final));
+	return index_by_word_destination.equal_range(boost::make_tuple(word,destination));
 }
 
 
-size_t Transitions::erase(const std::string &initial, const std::string &word, const std::string &final)
+size_t Transitions::erase(const std::string &source, const std::string &word, const std::string &destination)
 {
-    return index_by_transition.erase(initial+word+final);
+    return index_by_transition.erase(source+word+destination);
 }
 
 size_t Transitions::erase(const Transition &transition)
@@ -77,23 +77,23 @@ size_t Transitions::erase(const Transition &transition)
     return index_by_transition.erase(transition.transition());
 }
 
-size_t Transitions::erase_by_initial(const std::string &initial)
+size_t Transitions::erase_by_source(const std::string &source)
 {
-    return index_by_initial.erase(initial);
+    return index_by_source.erase(source);
 }
-Transitions::const_iterator_by_initial_word Transitions::erase_by_initial_word(const std::string &initial, const std::string &word)
+Transitions::const_iterator_by_source_word Transitions::erase_by_source_word(const std::string &source, const std::string &word)
 {
-    auto pIt = index_by_initial_word.equal_range(boost::make_tuple(initial,word));
-    return index_by_initial_word.erase(pIt.first,pIt.second);
+    auto pIt = index_by_source_word.equal_range(boost::make_tuple(source,word));
+    return index_by_source_word.erase(pIt.first,pIt.second);
 }
-Transitions::const_iterator_by_word_final Transitions::erase_by_word_final(const std::string &word, const std::string &final)
+Transitions::const_iterator_by_word_destination Transitions::erase_by_word_destination(const std::string &word, const std::string &destination)
 {
-    auto pIt = index_by_word_final.equal_range(boost::make_tuple(word,final));
-    return index_by_word_final.erase(pIt.first,pIt.second);
+    auto pIt = index_by_word_destination.equal_range(boost::make_tuple(word,destination));
+    return index_by_word_destination.erase(pIt.first,pIt.second);
 }
-size_t Transitions::erase_by_final(const std::string &final)
+size_t Transitions::erase_by_destination(const std::string &destination)
 {
-    return index_by_final.erase(final);
+    return index_by_destination.erase(destination);
 }
 
 const std::unordered_set<std::string> Transitions::getTransitions() const

@@ -23,26 +23,30 @@ Automaton::Automaton(const std::string &id, const Alphabet &X, const States &S,
             this->Sfinal.insert(s->id());
     }
     for(auto t : II)
-        this->II.insert(S[t.initial()],t.word(),S[t.final()]);
+        this->II.insert(S[t.source()],t.word(),S[t.destination()]);
 }
 
-bool Automaton::insertTransition(const std::string &initial, const std::string &word, const std::string &final) {
-    if( !S.exist(initial) || !S.exist(final) )
+bool Automaton::insertTransition(const std::string &source, const std::string &word, const std::string &destination) {
+    if( !S.exist(source) || !S.exist(destination) )
         return false;
-    return II.insert(S[initial], word, S[final]);
+    return II.insert(S[source], word, S[destination]);
 }
 
 bool Automaton::insertNewState(const std::string &state) {
-    if(state.find('_')!=state.npos)
+    if(state.find('_')!=state.npos || state.find("Sink")!=state.npos)
         return false;
     return S.insert(state);
+}
+bool Automaton::insertSinkState()
+{
+    return S.insert("Sink");
 }
 
 bool Automaton::insertNewStates(const std::unordered_set<std::string> &states)
 {
     bool ret = true;
     for(auto state : states) {
-        if (state.find('_') != state.npos)
+        if (state.find('_') != state.npos || state.find("Sink")!=state.npos)
             ret = false;
         else
             ret &= S.insert(state);
@@ -135,12 +139,13 @@ const Automaton  Automaton::toDeterministic() const{
     //...
 }
 
-const Automaton  Automaton::tocomplementary() const{
+const Automaton  Automaton::toComplementary() const{
 
 }
 
 const Automaton  Automaton::toComplete() const{
     //At least simple
+	//sink state
 }
 
 const Automaton Automaton::toPartiallyGeneralized() const//-> |word|<=1
@@ -160,27 +165,27 @@ const Automaton Automaton::toPartiallyGeneralized() const//-> |word|<=1
             State *ptrPreviousState = nullptr, *ptrNewState = nullptr;
             int i = 0;
             size_t size =  transition.word().size();
-            auto initial = transition.initial();
+            auto source = transition.source();
             for(i=0;i<size-1;i++)
             {
-                std::string newState(transition.initial()+"_"+std::to_string(index+1));
+                std::string newState(transition.source()+"_"+std::to_string(index+1));
                 if(!temp.S.insert(newState))
                 {
                     std::cout << "toPartiallyGeneralized failed on insertion of new state : " + newState + ".\n";
                     return  temp;
                 } else
                     index++;
-                ptrPreviousState = temp.S[initial];
+                ptrPreviousState = temp.S[source];
                 ptrNewState =  temp.S[newState];
                 if(ptrNewState == nullptr || ptrPreviousState == nullptr)
                 {
-                    std::cout << "toPartiallyGeneralized failed on retrieval of states : " + initial + ", " + newState + ".\n";
+                    std::cout << "toPartiallyGeneralized failed on retrieval of states : " + source + ", " + newState + ".\n";
                     return  temp;
                 }
                 temp.II.insert(ptrPreviousState,transition.getWord()[i],ptrNewState);
-                initial = newState;
+                source = newState;
             }
-            temp.II.insert(ptrNewState,transition.getWord()[i],transition.finalPtr());
+            temp.II.insert(ptrNewState,transition.getWord()[i],transition.destinationPtr());
         }
     }
     return temp;
@@ -209,7 +214,7 @@ const Automaton  Automaton::removeEpsilonTransitions() const{
     std::stack<Transition> bucket;
     for(auto s : Sinit)//Most of the time, there will only be one initial state.
     {
-        auto pIt = II.findAll_by_initial(s);//We retrieve the transitions that start from an initial state.
+        auto pIt = II.findAll_by_source(s);//We retrieve the transitions that start from an initial state.
         for(auto it = pIt.first; it != pIt.second; it++ )
             bucket.push(*it);
     }
@@ -231,38 +236,38 @@ const Automaton  Automaton::removeEpsilonTransitions() const{
 
         if(!transition.getWord().isEpsilon()) //w!=epsilon
         {
-            temp.insertNewState(transition.final());
+            temp.insertNewState(transition.destination());
 
-            temp.insertTransition(transition.initial(),transition.word(),transition.final());
+            temp.insertTransition(transition.source(),transition.word(),transition.destination());
 
-            if(isFinal(transition.final()))
-                temp.setFinal(transition.final());
+            if(isFinal(transition.destination()))
+                temp.setFinal(transition.destination());
 
-            auto pIt = II.findAll_by_initial(transition.final());
+            auto pIt = II.findAll_by_source(transition.destination());
             for(auto it = pIt.first;it != pIt.second;it++)
             {
                 if(it->getWord().isEpsilon()) {
-                    if (!temp.II.exist(transition.initial(), transition.word(), it->final()))
-                        bucket.push(Transition(transition.initialPtr(), transition.word(), it->finalPtr()));
+                    if (!temp.II.exist(transition.source(), transition.word(), it->destination()))
+                        bucket.push(Transition(transition.sourcePtr(), transition.word(), it->destinationPtr()));
                 }
                 else {//There was a "dangling else" problem here. I put the else here without the {}, so there was anbiguity(https://en.wikipedia.org/wiki/Dangling_else). which is a strait forwad exemple of what we've seen in class(what lead to Chomsky and Greibach normal forms).
-                        if (!temp.II.exist(transition.final(), it->word(), it->final()))
-                            bucket.push(Transition(transition.finalPtr(), it->word(), it->finalPtr()));
+                        if (!temp.II.exist(transition.destination(), it->word(), it->destination()))
+                            bucket.push(Transition(transition.destinationPtr(), it->word(), it->destinationPtr()));
                     }
             }
         }
         else //w==epsilon
         {
-            IIepsilon.insert(transition.initialPtr(),transition.word(),transition.finalPtr());
+            IIepsilon.insert(transition.sourcePtr(),transition.word(),transition.destinationPtr());
 
-            if(isFinal(transition.final()))
-                temp.setFinal(transition.initial());//State already inserted with the first block of if close or with initial states
+            if(isFinal(transition.destination()))
+                temp.setFinal(transition.source());//State already inserted with the first block of if close or with initial states
 
-            auto pIt = II.findAll_by_initial(transition.final());
+            auto pIt = II.findAll_by_source(transition.destination());
             for(auto it = pIt.first;it != pIt.second;it++)
             {
-                if(!temp.II.exist(transition.initial(),it->word(),it->final()) && !IIepsilon.exist(transition.initial(),it->word(),it->final()))
-                    bucket.push(Transition(transition.initialPtr(),it->word(),it->finalPtr()));
+                if(!temp.II.exist(transition.source(),it->word(),it->destination()) && !IIepsilon.exist(transition.source(),it->word(),it->destination()))
+                    bucket.push(Transition(transition.sourcePtr(),it->word(),it->destinationPtr()));
             }
         }
 /*
