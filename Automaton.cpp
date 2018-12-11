@@ -130,8 +130,7 @@ std::ostream& operator<<(std::ostream& out, const Automaton &automaton)
 }
 
 const Automaton  Automaton::toSimple() const{
-    //toPartiallyGeneralized();
-    //removeEpsilonTransitions();
+    return (this->toPartiallyGeneralized())/*.removeEpsilonTransitions()*/;
 }
 
 const Automaton  Automaton::toDeterministic() const{
@@ -146,6 +145,24 @@ const Automaton  Automaton::toComplementary() const{
 const Automaton  Automaton::toComplete() const{
     //At least simple
 	//sink state
+	Automaton temp(this->toSimple());
+
+	temp.insertSinkState();
+
+	auto states = temp.S.getStates();
+
+	for(auto s : states)
+    {
+        for(auto c : temp.getX())
+        {
+            std::string word({c});
+            auto pIt = temp.II.findAll_by_source_word(s,word);
+            if(pIt.first==pIt.second)//if both are equal, then they are equal to end, which means no noed has been found.
+                temp.insertTransition(s,word,"Sink");//inserts transition (s,c,sink)
+        }
+    }
+
+	return temp;
 }
 
 const Automaton Automaton::toPartiallyGeneralized() const//-> |word|<=1

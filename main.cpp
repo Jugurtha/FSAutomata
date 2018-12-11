@@ -232,5 +232,50 @@ int main() {
 
 //*/
 
+    std::cout << "\n\n--To complete--\n\n";
+
+    Automaton A2("A2",Alphabet({'a','b'}));
+
+    A2.insertNewStates({"P","Q","R","Q1","R1","R2"});
+
+    A2.setFinal(std::unordered_set<std::string>({"Q","R"}));
+
+    A2.setInitial("P");
+
+
+    A2.insertTransition("P", "b", "Q");
+    A2.insertTransition("P", "a", "R");
+    A2.insertTransition("Q", "a", "Q1");
+    A2.insertTransition("Q1", "a", "Q");
+    A2.insertTransition("R", "a", "R1");
+    A2.insertTransition("R1", "a", "R2");
+    A2.insertTransition("R2", "b", "R");
+
+    std::cout << A2 << "\n";
+
+    std::cout << A2.toComplete() << "\n";
+
+/*
+    std::cout << "\n\n--To Simple--\n\n";
+
+    Automaton A3("A3",Alphabet({'a','b'}));
+
+    A3.insertNewStates({"P","Q","R","S","T"});
+
+    A3.setFinal(std::unordered_set<std::string>({"Q","R"}));
+
+    A3.setInitial("P");
+
+    A3.insertTransition("P", "bab", "Q");
+    A3.insertTransition("P", "aba", "R");
+    A3.insertTransition("Q", "aaa", "R");
+    A3.insertTransition("Q", "bbb", "S");
+
+
+    std::cout << A3 << "\n";
+
+    std::cout << A3.toSimple() << "\n";
+//*/
+
     return 0;
 }
