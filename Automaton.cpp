@@ -130,7 +130,7 @@ std::ostream& operator<<(std::ostream& out, const Automaton &automaton)
 }
 
 const Automaton  Automaton::toSimple() const{
-    return (this->toPartiallyGeneralized())/*.removeEpsilonTransitions()*/;
+    return (this->toPartiallyGeneralized()).removeEpsilonTransitions();
 }
 
 const Automaton  Automaton::toDeterministic() const{
@@ -253,7 +253,7 @@ const Automaton  Automaton::removeEpsilonTransitions() const{
 
         if(!transition.getWord().isEpsilon()) //w!=epsilon
         {
-            temp.insertNewState(transition.destination());
+            temp.S.insert(transition.destination());
 
             temp.insertTransition(transition.source(),transition.word(),transition.destination());
 
