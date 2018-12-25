@@ -6,12 +6,15 @@
 #define FSAUTOMATA_AUTOMATON_H
 
 #include <unordered_set>
+#include <set>
 #include <stack>
+#include <algorithm>
 
 #include "Alphabet.h"
 #include "Word.h"
 #include "States.h"
 #include "Transitions.h"
+
 
 class Automaton {
 public:
@@ -60,10 +63,17 @@ private:
     std::unordered_set<std::string> Sinit;
     Transitions II;
     std::unordered_set<std::string> Sfinal;
-};
+
+    static size_t index;//Defined here for convinience.
+
+    std::string concatStates(const std::set<std::string> &statesSetForLetter)const;
+    bool intersect(const std::set<std::string> &orderedStates, const std::unordered_set<std::string> & unorderedStates)const;
+
+    };
 
 std::ostream& operator<<(std::ostream& out, const Automaton &automaton);
 std::ostream& operator<<(std::ostream& out, const std::unordered_set<std::string> &str);
+std::ostream& operator<<(std::ostream& out, const std::set<std::string> &str);
 std::ostream& operator<<(std::ostream& out, std::stack<Transition> stack);
 
 #endif //FSAUTOMATA_AUTOMATON_H

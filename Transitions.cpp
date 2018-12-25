@@ -67,6 +67,17 @@ std::pair<Transitions::const_iterator_by_word_destination,Transitions::const_ite
 }
 
 
+std::pair<Transitions::const_iterator_by_source_word,Transitions::const_iterator_by_source_word> Transitions::findAll_by_source_word(const std::string &source, const char &word)const
+{
+    std::string str({word});
+    return findAll_by_source_word(source, str);
+}
+std::pair<Transitions::const_iterator_by_word_destination,Transitions::const_iterator_by_word_destination> Transitions::findAll_by_word_destination(const char &word, const std::string &destination)const
+{
+    std::string str({word});
+    return findAll_by_word_destination(str, destination);
+}
+
 size_t Transitions::erase(const std::string &source, const std::string &word, const std::string &destination)
 {
     return index_by_transition.erase(source+word+destination);

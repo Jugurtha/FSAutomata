@@ -88,6 +88,8 @@ public:
     std::pair<const_iterator_by_destination,const_iterator_by_destination> findAll_by_destination(const std::string &destination)const;
     std::pair<const_iterator_by_source_word,const_iterator_by_source_word> findAll_by_source_word(const std::string &source, const std::string &word)const;
     std::pair<const_iterator_by_word_destination,const_iterator_by_word_destination> findAll_by_word_destination(const std::string &word, const std::string &destination)const;
+    std::pair<const_iterator_by_source_word,const_iterator_by_source_word> findAll_by_source_word(const std::string &source, const char &word)const;
+    std::pair<const_iterator_by_word_destination,const_iterator_by_word_destination> findAll_by_word_destination(const char &word, const std::string &destination)const;
 
 private:
     Transitions_container container_;

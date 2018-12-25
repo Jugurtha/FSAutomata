@@ -3,6 +3,7 @@
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/composite_key.hpp>
+#include <boost/tokenizer.hpp>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -173,7 +174,7 @@ int main() {
     A.insertTransition("S0", "ac", "S1");
     A.insertTransition("S0", "a", "S1");
     A.insertTransition("S0", "b", "S1");
-*/
+//*/
     std::cout << A << "\n";
 
     std::cout << "\n--to Partially Generalized--\n\n";
@@ -276,8 +277,33 @@ int main() {
 
     std::cout << A2.toComplete() << "\n";
 
+/*
+    std::string text="S0|S1|S2}";
+    boost::tokenizer<boost::char_separator<char> > tok(text,boost::char_separator<char>("{},"));
+    for(auto str : tok)
+        std::cout << str << "\n";
+*/
 
+    std::cout << "\n\n--To Deterministic--\n\n";
 
+    Automaton A5("A5",Alphabet({'a','b','c'}));
+
+    A5.insertNewStates({"P","Q","R"});
+
+    A5.setFinal(std::unordered_set<std::string>({"Q","R"}));
+
+    A5.setInitial("P");
+
+    A5.insertTransition("P", "a", "Q");
+    A5.insertTransition("P", "b", "R");
+    A5.insertTransition("P", "b", "Q");
+    A5.insertTransition("R", "c", "Q");
+    A5.insertTransition("Q", "a", "R");
+    A5.insertTransition("Q", "a", "R");
+
+    std::cout << A5 << "\n";
+
+    std::cout << A5.toDeterministic() << "\n";
 
     return 0;
 }

@@ -4,6 +4,8 @@
 
 #include "Automaton.h"
 
+size_t Automaton::index = 0;
+
 Automaton::Automaton(const std::string &id, Alphabet X): id_(id), X(X) {}
 
 Automaton::Automaton(const Automaton &automaton):Automaton(automaton.id(),automaton.X, automaton.S, automaton.Sinit, automaton.II, automaton.Sfinal)
@@ -133,9 +135,89 @@ const Automaton  Automaton::toSimple() const{
     return (this->toPartiallyGeneralized()).removeEpsilonTransitions();
 }
 
+std::string Automaton::concatStates(const std::set<std::string> &statesSetForLetter)const{
+        auto itDestination = statesSetForLetter.begin();
+        std::string ret(*itDestination);
+        itDestination++;
+        for(;itDestination!=statesSetForLetter.end();itDestination++)
+            ret = ret + "-" + *itDestination;
+        return ret;
+    }
+
+bool Automaton::intersect(const std::set<std::string> &orderedStates, const std::unordered_set<std::string> & unorderedStates)const
+{
+    bool answer = false;
+//*
+    for(auto it = unorderedStates.begin();it != unorderedStates.end();it++)
+        answer = answer | std::binary_search(orderedStates.begin(), orderedStates.end(), *it);
+//*/
+/*
+    for(auto it = orderedStates.begin();it != orderedStates.end();it++)
+        answer = answer | (unorderedStates.count(*it)==1);
+//*/
+    return answer;
+}
 const Automaton  Automaton::toDeterministic() const{
-    //toSimple();
-    //...
+    Automaton simpleAutomaton(this->toSimple()), tmp(id_,X);//We need to work on simple a Automata
+    tmp.insertNewStates(simpleAutomaton.getStates());
+    tmp.setInitial(simpleAutomaton.getSinit());
+    tmp.setFinal(simpleAutomaton.getSfinal());
+
+    std::stack<std::set<std::string>> bucket;//the elements are inserted in a sorted fashion
+
+    std::unordered_set<std::string> insertedStates;//test if state was inserted before insertion
+
+    for(auto s : simpleAutomaton.S)
+    {
+        bucket.push(std::set<std::string>({s->id()}));
+        insertedStates.insert(s->id());
+    }
+//std::cout << "Simple Automaton " << simpleAutomaton << "\n";
+
+    while(!bucket.empty())
+    {
+        std::set<std::string> statesSetPicked = bucket.top();
+        bucket.pop();
+//std::cout << tmp << "\n";
+//std::cout << statesSetPicked << "\n";
+
+        for(auto c : simpleAutomaton.X)
+        {
+            std::set<std::string> statesSetForLetter;
+            size_t nbrTransForLetter = 0;
+            for(auto source : statesSetPicked)
+            {
+                auto pIt = simpleAutomaton.II.findAll_by_source_word(source,c);
+//if(pIt.first == pIt.second)
+//    std::cout << "No" << "(" << source << ", " << c << ",*)\n";
+                for(auto it=pIt.first;it!=pIt.second;it++)
+                {
+                    statesSetForLetter.insert(it->destination());
+                    nbrTransForLetter++;
+                }
+            }
+            if(nbrTransForLetter >= 1){//if the state has more than one transition with c, we merge them into one that leads to the elements of statesSetForLetter(that are automatically sorted) separated by '-'
+                std::string newState;
+                newState  = concatStates(statesSetForLetter);
+
+                tmp.insertNewState(newState);//We insert the new state.
+
+                if(intersect(statesSetForLetter, Sinit))
+                    tmp.setInitial(newState);
+
+                if(intersect(statesSetForLetter, Sfinal))
+                    tmp.setFinal(newState);
+
+                tmp.insertTransition(concatStates(statesSetPicked), {c}, newState);//We add the transition
+                if(insertedStates.count(newState)==0)//we check if it wasn't already processed and pushed in the bucket
+                {
+                    bucket.push(statesSetForLetter);
+                    insertedStates.insert(newState);
+                }
+            }
+        }
+    }
+    return tmp;
 }
 
 const Automaton  Automaton::toComplementary() const{
@@ -168,7 +250,6 @@ const Automaton  Automaton::toComplete() const{
 const Automaton Automaton::toPartiallyGeneralized() const//-> |word|<=1
 {
     Automaton temp(*this);
-    static int index = 0;
     for(auto t : II)
     {
         if(t.word().size()>1)
@@ -298,6 +379,20 @@ const Automaton  Automaton::removeEpsilonTransitions() const{
 
 
 std::ostream& operator<<(std::ostream& out, const std::unordered_set<std::string> &str)
+{
+    out << "{ " ;
+    const size_t size = str.size();
+    auto it = str.cbegin();
+    if(size>0)
+    {
+        out << *it;
+        for(it++; it!=str.cend(); it++)
+            out << ", " << *it;
+    }
+    out << " }";
+    return out;
+}
+std::ostream& operator<<(std::ostream& out, const std::set<std::string> &str)
 {
     out << "{ " ;
     const size_t size = str.size();
