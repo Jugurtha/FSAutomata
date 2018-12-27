@@ -34,7 +34,7 @@ public:
     void setId(const std::string &id){id_ = id;};
 
     const Alphabet &getX() const;
-    const std::unordered_set<std::string> getStates();
+    const std::unordered_set<std::string> getStates()const;
     const std::unordered_set<std::string> &getSinit() const;
     const Transitions &getII() const;
     const std::unordered_set<std::string> &getSfinal() const;

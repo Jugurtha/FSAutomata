@@ -76,7 +76,7 @@ const Alphabet &Automaton::getX() const {
     return X;
 }
 
-const std::unordered_set<std::string> Automaton::getStates(){
+const std::unordered_set<std::string> Automaton::getStates()const {
     std::unordered_set<std::string> set;
     for(auto s : S.getStates())
         set.insert(s);
@@ -148,7 +148,7 @@ bool Automaton::intersect(const std::set<std::string> &orderedStates, const std:
 {
     bool answer = false;
 //*
-    for(auto it = unorderedStates.begin();it != unorderedStates.end();it++)
+    for(auto it = unorderedStates.begin();it != unorderedStates.end() && !answer;it++)
         answer = answer | std::binary_search(orderedStates.begin(), orderedStates.end(), *it);
 //*/
 /*
@@ -221,7 +221,14 @@ const Automaton  Automaton::toDeterministic() const{
 }
 
 const Automaton  Automaton::toComplementary() const{
-
+    //Simple(included in toDeterministic)->Deterministic->Complete->(final->non-final,non-final->final)
+    Automaton tmp(this->toDeterministic().toComplete());
+    auto finalStatesCopy(tmp.getSfinal());
+    tmp.Sfinal.clear();
+    for(auto state : tmp.S)
+        if(finalStatesCopy.count(state->id())==0)
+            tmp.setFinal(state->id());
+    return tmp;
 }
 
 const Automaton  Automaton::toComplete() const{

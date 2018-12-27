@@ -305,5 +305,27 @@ int main() {
 
     std::cout << A5.toDeterministic() << "\n";
 
+
+    std::cout << "\n\n--To Complementary--\n\n";
+
+    Automaton A6("A6",Alphabet({'a','b','c'}));
+
+    A6.insertNewStates({"P","Q","R"});
+
+    A6.setFinal(std::unordered_set<std::string>({"Q","R"}));
+
+    A6.setInitial("P");
+
+    A6.insertTransition("P", "a", "Q");
+    A6.insertTransition("P", "b", "R");
+    A6.insertTransition("P", "b", "Q");
+    A6.insertTransition("R", "c", "Q");
+    A6.insertTransition("Q", "a", "R");
+    A6.insertTransition("Q", "a", "R");
+
+    std::cout << A6 << "\n";
+
+    std::cout << A6.toComplementary() << "\n";
+
     return 0;
 }
