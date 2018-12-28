@@ -440,4 +440,29 @@ std::ostream& operator<<(std::ostream& out, std::stack<Transition> stack)
 
 
 
+bool Automaton::recognizes(const Word word) const
+{
+    //toDeterministic then go through the word. if the word ends on a final state, the word is recognised.
+    Automaton tmp(this->toDeterministic());
+//std::cout << "\n" << tmp << "\n";
+    bool isRecognised = true;
+    auto state = *(tmp.Sinit.begin());
+    if(word.isEpsilon())
+        return tmp.isFinal(state);
+    else
+    {
+        for(auto letterIt=word.begin();letterIt!=word.end() && isRecognised;letterIt++)
+        {
+            auto pIt = tmp.II.findAll_by_source_word(state, *letterIt);
+            if(pIt.first==pIt.second)
+                isRecognised = false;
+            else
+                state = (pIt.first)->destination();
+        }
+        return isRecognised && tmp.isFinal(state);
+    }
+}
+
+
+
 

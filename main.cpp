@@ -327,5 +327,32 @@ int main() {
 
     std::cout << A6.toComplementary() << "\n";
 
+
+
+    std::cout << "\n\n--recognises--\n\n";
+
+    Automaton A7("A7",Alphabet({'a','b','c'}));
+
+    A7.insertNewStates({"P","Q","R"});
+
+    A7.setFinal(std::unordered_set<std::string>({"Q","R"}));
+
+    A7.setInitial("P");
+
+    A7.insertTransition("P", "a", "Q");
+    A7.insertTransition("P", "b", "R");
+    A7.insertTransition("P", "b", "Q");
+    A7.insertTransition("R", "c", "Q");
+    A7.insertTransition("Q", "a", "R");
+
+    std::cout << A7 << "\n";
+    std::string str("bcacaca");
+    while(str!="stop")
+    {
+        std::cout << A7.recognizes(Word(str)) << "\n";
+        std::cin >> str;
+    }
+
+
     return 0;
 }
