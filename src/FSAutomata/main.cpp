@@ -8,11 +8,11 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
-#include "Word.h"
-#include "Alphabet.h"
-#include "Transitions.h"
-#include "States.h"
-#include "Automaton.h"
+#include "../FSAutomataLib/Word.h"
+#include "../FSAutomataLib/Alphabet.h"
+#include "../FSAutomataLib/Transitions.h"
+#include "../FSAutomataLib/States.h"
+#include "../FSAutomataLib/Automaton.h"
 
 
 std::string randStr(const Alphabet &alphabet, size_t length)
@@ -87,7 +87,7 @@ int main() {
         std::cout << it << "\n";
 
     std::cout << "\n--find S1-b->S2 by_transition--\n\n";
-
+//TODO test what's below
     std::cout << *II[boost::make_tuple("S1", "b", "S2")] << "\n" ;
 
     std::cout << "\n-- S2-b->S1 doesn't exist--\n\n";
