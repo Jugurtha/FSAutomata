@@ -87,7 +87,7 @@ int main() {
         std::cout << it << "\n";
 
     std::cout << "\n--find S1-b->S2 by_transition--\n\n";
-//TODO test what's below
+
     std::cout << *II[boost::make_tuple("S1", "b", "S2")] << "\n" ;
 
     std::cout << "\n-- S2-b->S1 doesn't exist--\n\n";
@@ -167,15 +167,15 @@ int main() {
     std::unordered_set<std::string>  initialStates({"S3","S4"});
     A.setInitial(initialStates);
 
-    for (int k = 0; k < 6; ++k)
-        A.insertTransition("S"+std::to_string(rand()%5), randStr(A.getX(),k%3 +1), "S"+std::to_string(rand()%5));
-/*
     A.insertTransition("S0", "abc", "S1");
-    A.insertTransition("S0", "ac", "S1");
-    A.insertTransition("S0", "a", "S1");
-    A.insertTransition("S0", "b", "S1");
-//*/
+    A.insertTransition("S1", "ac", "S2");
+    A.insertTransition("S2", "a", "S3");
+    A.insertTransition("S3", "b", "S4");
+    A.insertTransition("S0", " ", "S1");
+    A.insertTransition("S1", "", "S2");
+
     std::cout << A << "\n";
+
 
     std::cout << "\n--to Partially Generalized--\n\n";
 
