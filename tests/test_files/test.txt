@@ -1,0 +1,68 @@
+A1      <
+        X = { c, a, b },
+        S = { S0, S1, S2, S3, S4 },
+        Sinit = { S3, S4 },
+        II = {
+                (S0, abc, S1),
+                (S1, ac, S2),
+                (S2, a, S3),
+                (S3, b, S4),
+                (S0,  , S1),
+                (S1,  , S2) },
+        Sfinal = { S0, S1 }
+        >
+A1      <
+        X = { 2, 0, 1 },
+        S = { S0, S1, S2 },
+        Sinit = { S0 },
+        II = {
+                (S0, 0, S0),
+                (S0,  , S1),
+                (S1, 1, S1),
+                (S1,  , S2),
+                (S2, 2, S2) },
+        Sfinal = { S2 }
+        >
+A01     <
+        X = { b, a },
+        S = { Q1, R2, Q, R1, R, P },
+        Sinit = { P },
+        II = {
+                (P,  , Q),
+                (P,  , R),
+                (Q, a, Q1),
+                (Q1, a, Q),
+                (R, a, R1),
+                (R1, a, R2),
+                (R2, a, R) },
+        Sfinal = { Q, R }
+        >
+A6      <
+        X = { c, a, b },
+        S = { R, P, Q },
+        Sinit = { P },
+        II = {
+                (P, a, Q),
+                (P, b, R),
+                (P, b, Q),
+                (R, c, Q),
+                (Q, a, R) },
+        Sfinal = { Q, R }
+        >
+A3      <
+        X = { b, a },
+        S = { S, T, P, Q, R },
+        Sinit = { P },
+        II = {
+                (P, bab, Q),
+                (P,  , Q),
+                (Q, a, R),
+                (Q, b, S) },
+        Sfinal = { Q, R }
+        >
+
+
+
+
+
+
