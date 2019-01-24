@@ -1,0 +1,44 @@
+
+A1 : 
+	aa -> Not Recognized.
+	ab -> Not Recognized.
+	  -> Not Recognized.
+	j -> Not Recognized.
+	l -> Not Recognized.
+
+----------------------------
+
+A2 : 
+	  -> Recognized.
+	00 -> Recognized.
+	12 -> Recognized.
+	210 -> Not Recognized.
+	22 -> Recognized.
+
+----------------------------
+
+A3 : 
+	bb -> Not Recognized.
+	a -> Not Recognized.
+	  -> Recognized.
+	1 -> Not Recognized.
+	2 -> Not Recognized.
+
+----------------------------
+
+A4 : 
+	cc -> Not Recognized.
+	ab -> Not Recognized.
+	  -> Not Recognized.
+	c -> Not Recognized.
+	a -> Recognized.
+	b -> Recognized.
+
+----------------------------
+
+A5 : 
+	bab -> Recognized.
+	babab -> Not Recognized.
+	baba -> Recognized.
+
+----------------------------

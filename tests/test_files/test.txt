@@ -11,7 +11,7 @@ A1      <
                 (S1,  , S2) },
         Sfinal = { S0, S1 }
         >
-A1      <
+A2      <
         X = { 2, 0, 1 },
         S = { S0, S1, S2 },
         Sinit = { S0 },
@@ -23,7 +23,7 @@ A1      <
                 (S2, 2, S2) },
         Sfinal = { S2 }
         >
-A01     <
+A3     <
         X = { b, a },
         S = { Q1, R2, Q, R1, R, P },
         Sinit = { P },
@@ -37,7 +37,7 @@ A01     <
                 (R2, a, R) },
         Sfinal = { Q, R }
         >
-A6      <
+A4      <
         X = { c, a, b },
         S = { R, P, Q },
         Sinit = { P },
@@ -49,7 +49,7 @@ A6      <
                 (Q, a, R) },
         Sfinal = { Q, R }
         >
-A3      <
+A5      <
         X = { b, a },
         S = { S, T, P, Q, R },
         Sinit = { P },
@@ -60,9 +60,4 @@ A3      <
                 (Q, b, S) },
         Sfinal = { Q, R }
         >
-
-
-
-
-
 

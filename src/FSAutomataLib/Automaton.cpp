@@ -35,7 +35,7 @@ bool Automaton::insertTransition(const std::string &source, const std::string &w
 }
 
 bool Automaton::insertNewState(const std::string &state) {
-    if(state.find('_')!=state.npos || state.find("Sink")!=state.npos)
+    if(state.find("Sink")!=state.npos)
         return false;
     return S.insert(state);
 }
@@ -48,7 +48,7 @@ bool Automaton::insertNewStates(const std::unordered_set<std::string> &states)
 {
     bool ret = true;
     for(auto state : states) {
-        if (state.find('_') != state.npos || state.find("Sink")!=state.npos)
+        if (state.find("Sink")!=state.npos)
             ret = false;
         else
             ret &= S.insert(state);
@@ -157,11 +157,15 @@ bool Automaton::intersect(const std::set<std::string> &orderedStates, const std:
 //*/
     return answer;
 }
+
 const Automaton  Automaton::toDeterministic() const{
     Automaton simpleAutomaton(this->toSimple()), tmp(id_,X);//We need to work on simple a Automata
+
     tmp.insertNewStates(simpleAutomaton.getStates());
     tmp.setInitial(simpleAutomaton.getSinit());
     tmp.setFinal(simpleAutomaton.getSfinal());
+//std::cout << "1\n" << simpleAutomaton << "\n";
+//std::cout << "2\n" << tmp << "\n";
 
     std::stack<std::set<std::string>> bucket;//the elements are inserted in a sorted fashion
 
@@ -217,6 +221,7 @@ const Automaton  Automaton::toDeterministic() const{
             }
         }
     }
+//std::cout << "3\n" << tmp << "\n";
     return tmp;
 }
 
@@ -444,7 +449,7 @@ bool Automaton::recognizes(const Word word) const
 {
     //toDeterministic then go through the word. if the word ends on a final state, the word is recognised.
     Automaton tmp(this->toDeterministic());
-//std::cout << "\n" << tmp << "\n";
+// "\n" << tmp << "\n";
     bool isRecognised = true;
     auto state = *(tmp.Sinit.begin());
     if(word.isEpsilon())
