@@ -3,6 +3,7 @@
 //
 
 #include "Automaton.h"
+#include <queue>
 
 size_t Automaton::index = 0;
 
@@ -468,6 +469,92 @@ bool Automaton::recognizes(const Word word) const
     }
 }
 
+
+
+std::unordered_set<std::string> Automaton::getAccessibleStates() const {
+
+    std::queue<std::string> bucket;
+    std::unordered_set<std::string> accStates;
+    for(auto state : getSinit())
+    {
+        bucket.push(state);
+        accStates.insert(state);
+    }
+    std::unordered_set<std::string> checkedStates;
+
+    while(!bucket.empty())
+    {
+        std::string state = bucket.front();
+        checkedStates.insert(state);//a state is checked if it has been in and out of bucket.
+        bucket.pop();
+
+        auto pIt = II.findAll_by_source(state);
+        for(auto it = pIt.first;it != pIt.second;it++)
+        {
+            if(!checkedStates.count(it->destination()))
+                bucket.push(it->destination());
+            accStates.insert(it->destination());//destination is reachable.
+        }
+        if(accStates.size()==getStates().size())
+            break;
+    }
+    return accStates;
+}
+
+std::unordered_set<std::string> Automaton::getCoaccessibleStates() const
+{
+    std::queue<std::string> bucket;
+    std::unordered_set<std::string> coaccStates;
+    for(auto state : getSfinal())
+    {
+        bucket.push(state);
+        coaccStates.insert(state);
+    }
+    std::unordered_set<std::string> checkedStates;
+
+    while(!bucket.empty())
+    {
+        std::string state = bucket.front();
+        checkedStates.insert(state);//a state is checked if it has been in and out of bucket.
+        bucket.pop();
+
+        auto pIt = II.findAll_by_destination(state);
+        for(auto it = pIt.first;it != pIt.second;it++)
+        {
+            if(!checkedStates.count(it->source()))
+                bucket.push(it->source());
+            coaccStates.insert(it->source());//destination is reachable.
+        }
+        if(coaccStates.size()==getStates().size())
+            break;
+    }
+    return coaccStates;
+}
+
+const Automaton Automaton::toReduced()const
+{
+    Automaton reduced(id_,X);
+    auto aStates = getAccessibleStates();
+    auto cStates = getCoaccessibleStates();
+    std::unordered_set<std::string> states;
+
+    for(auto state : getStates())
+        if(aStates.count(state)&&cStates.count(state))
+        {
+            reduced.S.insert(state);
+            states.insert(state);
+            if(isInitial(state))
+                reduced.setInitial(state);
+            if(isFinal(state))
+                reduced.setFinal(state);
+        }
+
+    for(auto transition : II)
+        if(states.count(transition.source()) && states.count(transition.destination()))
+            reduced.II.insert(transition);
+
+    return reduced;
+}
 
 
 

@@ -193,8 +193,8 @@ int main(int argc, char* argv[]) {
                 if(allSet || optionsMap.count(COMPLEMENTARY))
                     fileOut << "\n" << "COMPLEMENTARY" <<"\n" << automaton.toComplementary() << "\n----------";
 
-                //if(allSet || optionsMap.count(REDUCED))//Not implemented yet..
-                //  fileOut << "\n" << "REDUCED" << "\n" << automaton.toReduced() << "\n----------";
+                if(allSet || optionsMap.count(REDUCED))//Not implemented yet..
+                  fileOut << "\n" << "REDUCED" << "\n" << automaton.toReduced() << "\n----------";
 
                 if(optionsMap.count(RECOGNIZE))
                 {

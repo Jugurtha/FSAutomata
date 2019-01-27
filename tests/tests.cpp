@@ -290,6 +290,47 @@ TEST_CASE("Automaton Check")
     }
 }
 
+TEST_CASE("Automaton Operations")
+{
+    SECTION("toReduced check")
+    {
+        Automaton A("A", Alphabet({'a','b'}));
+        A.insertNewStates({"S1","S2","S3","S4","S5","S6","S7"});
+        A.setInitial("S1");
+        A.setInitial("S2");
+        A.setFinal("S6");
+        A.setFinal("S7");
+        A.insertTransition("S1","a","S1");
+        A.insertTransition("S1","b","S2");
+        A.insertTransition("S2","","S3");
+        A.insertTransition("S3","ab","S6");
+        A.insertTransition("S7","ba","S5");
+        A.insertTransition("S5","aa","S7");
+        A.insertTransition("S5","bb","S1");
+
+        auto reduced = A.toReduced();
+
+        auto states = reduced.getStates();
+        REQUIRE(states.count("S1"));
+        REQUIRE(states.count("S2"));
+        REQUIRE(states.count("S3"));
+        REQUIRE(states.count("S6"));
+
+        REQUIRE(reduced.getSinit().count("S1"));
+        REQUIRE(reduced.getSinit().count("S2"));
+        REQUIRE(reduced.getSinit().size()==2);
+        REQUIRE(reduced.getSfinal().count("S6"));
+        REQUIRE(reduced.getSfinal().size()==1);
+
+        auto transitions = reduced.getII().getTransitions();
+        REQUIRE(transitions.count("S1""a""S1"));
+        REQUIRE(transitions.count("S1""b""S2"));
+        REQUIRE(transitions.count("S2"" ""S3"));
+        REQUIRE(transitions.count("S3""ab""S6"));
+
+    }
+}
+
 
 
 

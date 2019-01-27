@@ -47,6 +47,9 @@ public:
 
     bool recognizes(const Word word) const;
 
+    std::unordered_set<std::string> getAccessibleStates() const;
+    std::unordered_set<std::string> getCoaccessibleStates() const;
+
     const Automaton  toReduced()const;
     const Automaton toPartiallyGeneralized() const;//-> |word|<=1
     const Automaton  removeEpsilonTransitions()const;

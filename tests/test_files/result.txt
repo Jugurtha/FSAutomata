@@ -12,12 +12,93 @@ A1	<
 	Sfinal = { S0, S1 }
 	>
 ----------
+REMOVE EPSILON TRANSITIONS
+A1	<
+	X = { b, a, c },
+	S = { S3, S4 },
+	Sinit = { S4, S3 },
+	II = { (S3, b, S4) },
+	Sfinal = {  }
+	>
+----------
+PARTIALLY GENERALISED
+A1	<
+	X = { b, a, c },
+	S = { S4, S0, S3, S1, S2, S0_1, S0_2, S1_3 },
+	Sinit = { S3, S4 },
+	II = { 
+		(S2, a, S3), 
+		(S3, b, S4), 
+		(S0,  , S1), 
+		(S1,  , S2), 
+		(S0, a, S0_1), 
+		(S0_1, b, S0_2), 
+		(S0_2, c, S1), 
+		(S1, a, S1_3), 
+		(S1_3, c, S2) },
+	Sfinal = { S1, S0 }
+	>
+----------
+SIMPLE
+A1	<
+	X = { b, a, c },
+	S = { S3, S4 },
+	Sinit = { S4, S3 },
+	II = { (S3, b, S4) },
+	Sfinal = {  }
+	>
+----------
+COMPLETE
+A1	<
+	X = { b, a, c },
+	S = { S3, S4, Sink },
+	Sinit = { S4, S3 },
+	II = { 
+		(S3, b, S4), 
+		(Sink, b, Sink), 
+		(Sink, a, Sink), 
+		(Sink, c, Sink), 
+		(S4, b, Sink), 
+		(S4, a, Sink), 
+		(S4, c, Sink), 
+		(S3, a, Sink), 
+		(S3, c, Sink) },
+	Sfinal = {  }
+	>
+----------
 DETERMINISTIC
 A1	<
 	X = { b, a, c },
 	S = { S3, S4 },
 	Sinit = { S3, S4 },
 	II = { (S3, b, S4) },
+	Sfinal = {  }
+	>
+----------
+COMPLEMENTARY
+A1	<
+	X = { b, a, c },
+	S = { S4, S3, Sink },
+	Sinit = { S3, S4 },
+	II = { 
+		(S3, b, S4), 
+		(Sink, b, Sink), 
+		(Sink, a, Sink), 
+		(Sink, c, Sink), 
+		(S3, a, Sink), 
+		(S3, c, Sink), 
+		(S4, b, Sink), 
+		(S4, a, Sink), 
+		(S4, c, Sink) },
+	Sfinal = { Sink, S3, S4 }
+	>
+----------
+REDUCED
+A1	<
+	X = { b, a, c },
+	S = {  },
+	Sinit = {  },
+	II = {  },
 	Sfinal = {  }
 	>
 --------------------------------------
@@ -32,6 +113,81 @@ A2	<
 		(S1,  , S2), 
 		(S2, 2, S2) },
 	Sfinal = { S2 }
+	>
+----------
+REMOVE EPSILON TRANSITIONS
+A2	<
+	X = { 1, 0, 2 },
+	S = { S0, S1, S2 },
+	Sinit = { S0 },
+	II = { 
+		(S0, 0, S0), 
+		(S0, 0, S1), 
+		(S1, 1, S1), 
+		(S1, 1, S2), 
+		(S2, 2, S2), 
+		(S0, 0, S2), 
+		(S0, 1, S1), 
+		(S0, 1, S2), 
+		(S0, 2, S2) },
+	Sfinal = { S0, S2 }
+	>
+----------
+PARTIALLY GENERALISED
+A2	<
+	X = { 1, 0, 2 },
+	S = { S2, S0, S1 },
+	Sinit = { S0 },
+	II = { 
+		(S0, 0, S0), 
+		(S0,  , S1), 
+		(S1, 1, S1), 
+		(S1,  , S2), 
+		(S2, 2, S2) },
+	Sfinal = { S2 }
+	>
+----------
+SIMPLE
+A2	<
+	X = { 1, 0, 2 },
+	S = { S0, S1, S2 },
+	Sinit = { S0 },
+	II = { 
+		(S0, 0, S0), 
+		(S0, 0, S1), 
+		(S1, 1, S1), 
+		(S1, 1, S2), 
+		(S2, 2, S2), 
+		(S0, 0, S2), 
+		(S0, 1, S1), 
+		(S0, 1, S2), 
+		(S0, 2, S2) },
+	Sfinal = { S0, S2 }
+	>
+----------
+COMPLETE
+A2	<
+	X = { 1, 0, 2 },
+	S = { S0, S1, S2, Sink },
+	Sinit = { S0 },
+	II = { 
+		(S0, 0, S0), 
+		(S0, 0, S1), 
+		(S1, 1, S1), 
+		(S1, 1, S2), 
+		(S2, 2, S2), 
+		(S0, 0, S2), 
+		(S0, 1, S1), 
+		(S0, 1, S2), 
+		(S0, 2, S2), 
+		(Sink, 1, Sink), 
+		(Sink, 0, Sink), 
+		(Sink, 2, Sink), 
+		(S2, 1, Sink), 
+		(S2, 0, Sink), 
+		(S1, 0, Sink), 
+		(S1, 2, Sink) },
+	Sfinal = { S0, S2 }
 	>
 ----------
 DETERMINISTIC
@@ -52,6 +208,44 @@ A2	<
 		(S0-S1-S2, 2, S2) },
 	Sfinal = { S0-S1-S2, S1-S2, S0, S2 }
 	>
+----------
+COMPLEMENTARY
+A2	<
+	X = { 1, 0, 2 },
+	S = { S0-S1-S2, S0, S1-S2, S2, Sink },
+	Sinit = { S0, S0-S1-S2 },
+	II = { 
+		(S0, 1, S1-S2), 
+		(S1-S2, 1, S1-S2), 
+		(S1-S2, 2, S2), 
+		(S2, 2, S2), 
+		(S0, 0, S0-S1-S2), 
+		(S0-S1-S2, 1, S1-S2), 
+		(S0-S1-S2, 0, S0-S1-S2), 
+		(S0-S1-S2, 2, S2), 
+		(S0, 2, S2), 
+		(Sink, 1, Sink), 
+		(Sink, 0, Sink), 
+		(Sink, 2, Sink), 
+		(S1-S2, 0, Sink), 
+		(S2, 1, Sink), 
+		(S2, 0, Sink) },
+	Sfinal = { Sink }
+	>
+----------
+REDUCED
+A2	<
+	X = { 1, 0, 2 },
+	S = { S2, S0, S1 },
+	Sinit = { S0 },
+	II = { 
+		(S0, 0, S0), 
+		(S0,  , S1), 
+		(S1, 1, S1), 
+		(S1,  , S2), 
+		(S2, 2, S2) },
+	Sfinal = { S2 }
+	>
 --------------------------------------
 A3	<
 	X = { a, b },
@@ -66,6 +260,78 @@ A3	<
 		(R1, a, R2), 
 		(R2, a, R) },
 	Sfinal = { Q, R }
+	>
+----------
+REMOVE EPSILON TRANSITIONS
+A3	<
+	X = { a, b },
+	S = { P, Q1, Q, R1, R2, R },
+	Sinit = { P },
+	II = { 
+		(P, a, Q1), 
+		(Q1, a, Q), 
+		(Q, a, Q1), 
+		(P, a, R1), 
+		(R1, a, R2), 
+		(R2, a, R), 
+		(R, a, R1) },
+	Sfinal = { R, Q, P }
+	>
+----------
+PARTIALLY GENERALISED
+A3	<
+	X = { a, b },
+	S = { P, R, R1, Q, R2, Q1 },
+	Sinit = { P },
+	II = { 
+		(P,  , Q), 
+		(P,  , R), 
+		(Q, a, Q1), 
+		(Q1, a, Q), 
+		(R, a, R1), 
+		(R1, a, R2), 
+		(R2, a, R) },
+	Sfinal = { Q, R }
+	>
+----------
+SIMPLE
+A3	<
+	X = { a, b },
+	S = { P, Q1, Q, R1, R2, R },
+	Sinit = { P },
+	II = { 
+		(P, a, Q1), 
+		(Q1, a, Q), 
+		(Q, a, Q1), 
+		(P, a, R1), 
+		(R1, a, R2), 
+		(R2, a, R), 
+		(R, a, R1) },
+	Sfinal = { R, Q, P }
+	>
+----------
+COMPLETE
+A3	<
+	X = { a, b },
+	S = { P, Q1, Q, R1, R2, R, Sink },
+	Sinit = { P },
+	II = { 
+		(P, a, Q1), 
+		(Q1, a, Q), 
+		(Q, a, Q1), 
+		(P, a, R1), 
+		(R1, a, R2), 
+		(R2, a, R), 
+		(R, a, R1), 
+		(Sink, a, Sink), 
+		(Sink, b, Sink), 
+		(R, b, Sink), 
+		(R2, b, Sink), 
+		(R1, b, Sink), 
+		(Q1, b, Sink), 
+		(P, b, Sink), 
+		(Q, b, Sink) },
+	Sfinal = { R, Q, P }
 	>
 ----------
 DETERMINISTIC
@@ -88,6 +354,47 @@ A3	<
 		(Q-R, a, Q1-R1) },
 	Sfinal = { Q-R1, Q1-R, Q-R, R, Q, P, Q-R2 }
 	>
+----------
+COMPLEMENTARY
+A3	<
+	X = { a, b },
+	S = { P, Q1-R1, Q-R2, Q1-R, Q-R1, Q1-R2, Q-R, Sink },
+	Sinit = { P },
+	II = { 
+		(P, a, Q1-R1), 
+		(Q1-R1, a, Q-R2), 
+		(Q-R2, a, Q1-R), 
+		(Q1-R, a, Q-R1), 
+		(Q-R1, a, Q1-R2), 
+		(Q1-R2, a, Q-R), 
+		(Q-R, a, Q1-R1), 
+		(Q-R, b, Sink), 
+		(Q1-R2, b, Sink), 
+		(Q-R1, b, Sink), 
+		(Sink, a, Sink), 
+		(Sink, b, Sink), 
+		(Q-R2, b, Sink), 
+		(P, b, Sink), 
+		(Q1-R1, b, Sink), 
+		(Q1-R, b, Sink) },
+	Sfinal = { Sink, Q1-R2, Q1-R1 }
+	>
+----------
+REDUCED
+A3	<
+	X = { a, b },
+	S = { Q, P, R2, R1, Q1, R },
+	Sinit = { P },
+	II = { 
+		(P,  , Q), 
+		(P,  , R), 
+		(Q, a, Q1), 
+		(Q1, a, Q), 
+		(R, a, R1), 
+		(R1, a, R2), 
+		(R2, a, R) },
+	Sfinal = { R, Q }
+	>
 --------------------------------------
 A4	<
 	X = { b, a, c },
@@ -100,6 +407,70 @@ A4	<
 		(R, c, Q), 
 		(Q, a, R) },
 	Sfinal = { Q, R }
+	>
+----------
+REMOVE EPSILON TRANSITIONS
+A4	<
+	X = { b, a, c },
+	S = { P, Q, R },
+	Sinit = { P },
+	II = { 
+		(P, a, Q), 
+		(Q, a, R), 
+		(R, c, Q), 
+		(P, b, R), 
+		(P, b, Q) },
+	Sfinal = { R, Q }
+	>
+----------
+PARTIALLY GENERALISED
+A4	<
+	X = { b, a, c },
+	S = { Q, R, P },
+	Sinit = { P },
+	II = { 
+		(P, a, Q), 
+		(P, b, R), 
+		(P, b, Q), 
+		(R, c, Q), 
+		(Q, a, R) },
+	Sfinal = { R, Q }
+	>
+----------
+SIMPLE
+A4	<
+	X = { b, a, c },
+	S = { P, Q, R },
+	Sinit = { P },
+	II = { 
+		(P, a, Q), 
+		(Q, a, R), 
+		(R, c, Q), 
+		(P, b, R), 
+		(P, b, Q) },
+	Sfinal = { R, Q }
+	>
+----------
+COMPLETE
+A4	<
+	X = { b, a, c },
+	S = { P, Q, R, Sink },
+	Sinit = { P },
+	II = { 
+		(P, a, Q), 
+		(Q, a, R), 
+		(R, c, Q), 
+		(P, b, R), 
+		(P, b, Q), 
+		(Sink, b, Sink), 
+		(Sink, a, Sink), 
+		(Sink, c, Sink), 
+		(R, b, Sink), 
+		(R, a, Sink), 
+		(Q, b, Sink), 
+		(Q, c, Sink), 
+		(P, c, Sink) },
+	Sfinal = { R, Q }
 	>
 ----------
 DETERMINISTIC
@@ -116,6 +487,44 @@ A4	<
 		(Q-R, c, Q) },
 	Sfinal = { Q-R, R, Q }
 	>
+----------
+COMPLEMENTARY
+A4	<
+	X = { b, a, c },
+	S = { P, Q-R, R, Q, Sink },
+	Sinit = { P },
+	II = { 
+		(P, b, Q-R), 
+		(Q-R, a, R), 
+		(R, c, Q), 
+		(Q, a, R), 
+		(Q-R, c, Q), 
+		(P, a, Q), 
+		(Sink, b, Sink), 
+		(Sink, a, Sink), 
+		(Sink, c, Sink), 
+		(Q-R, b, Sink), 
+		(R, b, Sink), 
+		(R, a, Sink), 
+		(P, c, Sink), 
+		(Q, b, Sink), 
+		(Q, c, Sink) },
+	Sfinal = { Sink, P }
+	>
+----------
+REDUCED
+A4	<
+	X = { b, a, c },
+	S = { Q, R, P },
+	Sinit = { P },
+	II = { 
+		(P, a, Q), 
+		(P, b, R), 
+		(P, b, Q), 
+		(R, c, Q), 
+		(Q, a, R) },
+	Sfinal = { R, Q }
+	>
 --------------------------------------
 A5	<
 	X = { a, b },
@@ -129,19 +538,123 @@ A5	<
 	Sfinal = { Q, R }
 	>
 ----------
+REMOVE EPSILON TRANSITIONS
+A5	<
+	X = { a, b },
+	S = { P, Q, R, S },
+	Sinit = { P },
+	II = { 
+		(P, bab, Q), 
+		(Q, a, R), 
+		(Q, b, S), 
+		(P, a, R), 
+		(P, b, S) },
+	Sfinal = { P, R, Q }
+	>
+----------
+PARTIALLY GENERALISED
+A5	<
+	X = { a, b },
+	S = { R, S, P, T, Q, P_31, P_32 },
+	Sinit = { P },
+	II = { 
+		(P,  , Q), 
+		(Q, a, R), 
+		(Q, b, S), 
+		(P, b, P_31), 
+		(P_31, a, P_32), 
+		(P_32, b, Q) },
+	Sfinal = { Q, R }
+	>
+----------
+SIMPLE
+A5	<
+	X = { a, b },
+	S = { P, R, S, P_33, P_34, Q },
+	Sinit = { P },
+	II = { 
+		(P, a, R), 
+		(P, b, S), 
+		(P, b, P_33), 
+		(P_33, a, P_34), 
+		(P_34, b, Q), 
+		(Q, a, R), 
+		(Q, b, S) },
+	Sfinal = { Q, R, P }
+	>
+----------
+COMPLETE
+A5	<
+	X = { a, b },
+	S = { P, R, S, P_35, P_36, Q, Sink },
+	Sinit = { P },
+	II = { 
+		(P, a, R), 
+		(P, b, S), 
+		(P, b, P_35), 
+		(P_35, a, P_36), 
+		(P_36, b, Q), 
+		(Q, a, R), 
+		(Q, b, S), 
+		(Sink, a, Sink), 
+		(Sink, b, Sink), 
+		(P_36, a, Sink), 
+		(S, a, Sink), 
+		(S, b, Sink), 
+		(R, a, Sink), 
+		(R, b, Sink), 
+		(P_35, b, Sink) },
+	Sfinal = { Q, R, P }
+	>
+----------
 DETERMINISTIC
 A5	<
 	X = { a, b },
-	S = { P_19, R, P_20, Q, P, S, P_19-S },
+	S = { P_37, Q, P, S, R, P_38, P_37-S },
 	Sinit = { P },
 	II = { 
 		(Q, a, R), 
 		(Q, b, S), 
-		(P_20, b, Q), 
-		(P_19, a, P_20), 
+		(P_38, b, Q), 
+		(P_37, a, P_38), 
 		(P, a, R), 
-		(P, b, P_19-S), 
-		(P_19-S, a, P_20) },
+		(P, b, P_37-S), 
+		(P_37-S, a, P_38) },
 	Sfinal = { P, R, Q }
+	>
+----------
+COMPLEMENTARY
+A5	<
+	X = { a, b },
+	S = { P, R, P_39-S, P_40, Q, S, Sink },
+	Sinit = { P },
+	II = { 
+		(P, a, R), 
+		(P, b, P_39-S), 
+		(P_39-S, a, P_40), 
+		(P_40, b, Q), 
+		(Q, a, R), 
+		(Q, b, S), 
+		(Sink, a, Sink), 
+		(Sink, b, Sink), 
+		(S, a, Sink), 
+		(S, b, Sink), 
+		(R, a, Sink), 
+		(R, b, Sink), 
+		(P_40, a, Sink), 
+		(P_39-S, b, Sink) },
+	Sfinal = { S, P_40, Sink, P_39-S }
+	>
+----------
+REDUCED
+A5	<
+	X = { a, b },
+	S = { R, Q, P },
+	Sinit = { P },
+	II = { 
+		(P, bab, Q), 
+		(P,  , Q), 
+		(Q, a, R) },
+	Sfinal = { Q, R }
 	>
 --------------------------------------
